@@ -154,7 +154,7 @@
     </div>
     
     <!-- Success Card (Initially Hidden) -->
-    <div id="successCard" style="display: none;" class="hidden relative z-10 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 max-w-md w-full text-center">
+    <div id="successCard" style="display: none;" class="relative z-10 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 max-w-md w-full text-center">
         <!-- Bouncing Emojis -->
         <div class="text-6xl mb-6 space-x-2">
             <span class="inline-block bounce">🎉</span>
@@ -197,7 +197,7 @@
                 const leftPosition = Math.random() * 100;
                 const animationDuration = 4 + Math.random() * 3; // 4-7 seconds
                 const animationDelay = Math.random() * 5; // 0-5 seconds delay
-                const size = 1 + Math.random() * 1.5; // Random size between 1rem and 2.5rem
+                const size = 1 + Math.random() * 1.5; // Random size between 1rem and 2.5rem (1 + 0 to 1 + 1.5)
                 
                 heart.style.left = `${leftPosition}%`;
                 heart.style.fontSize = `${size}rem`;
@@ -264,7 +264,6 @@
             setTimeout(() => {
                 mainCard.style.display = 'none';
                 successCard.style.display = 'block';
-                successCard.classList.remove('hidden');
                 
                 // Start confetti
                 startConfetti();
