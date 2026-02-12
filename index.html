@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Proposal 💖</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        .pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        
+        /* Floating hearts animation */
+        @keyframes float {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .floating-heart {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Fade in up animation for success card */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.4s;
+            opacity: 0;
+        }
+        
+        .delay-3 {
+            animation-delay: 0.6s;
+            opacity: 0;
+        }
+        
+        /* Bounce animation for emojis */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .bounce {
+            animation: bounce 1s ease-in-out infinite;
+        }
+        
+        /* Confetti styling */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-100 via-red-50 to-pink-200 flex items-center justify-center p-4 overflow-hidden">
+    
+    <!-- Background hearts container -->
+    <div id="hearts-container"></div>
+    
+    <!-- Confetti canvas -->
+    <canvas id="confettiCanvas"></canvas>
+    
+    <!-- Main Card -->
+    <div id="mainCard" class="relative z-10 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 max-w-md w-full text-center transition-opacity duration-500">
+        <!-- SVG Mascot (Bear with Heart) -->
+        <div class="mb-6 flex justify-center">
+            <svg class="w-24 h-24 text-pink-500" viewBox="0 0 100 100" fill="currentColor">
+                <!-- Bear Head -->
+                <circle cx="50" cy="50" r="30" />
+                <!-- Left Ear -->
+                <circle cx="30" cy="30" r="12" />
+                <!-- Right Ear -->
+                <circle cx="70" cy="30" r="12" />
+                <!-- Left Eye -->
+                <circle cx="42" cy="45" r="3" fill="white" />
+                <!-- Right Eye -->
+                <circle cx="58" cy="45" r="3" fill="white" />
+                <!-- Nose -->
+                <ellipse cx="50" cy="55" rx="5" ry="4" fill="white" />
+                <!-- Heart on chest -->
+                <path d="M 50 65 L 45 60 Q 40 55 45 50 Q 50 55 50 55 Q 50 55 55 50 Q 60 55 55 60 Z" fill="#ec4899" />
+            </svg>
+        </div>
+        
+        <!-- Main Question -->
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            Hey <span class="pacifico text-pink-600">Boo</span>! 💕
+        </h1>
+        
+        <p class="text-lg md:text-xl text-gray-700 mb-8">
+            Will you be my Valentine?
+        </p>
+        
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button id="yesBtn" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200 text-lg">
+                YES! 💖
+            </button>
+            
+            <button id="noBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-200 text-lg">
+                No
+            </button>
+        </div>
+        
+        <p class="text-sm text-gray-500 mt-6">
+            Choose wisely... 😏
+        </p>
+    </div>
+    
+    <!-- Success Card (Initially Hidden) -->
+    <div id="successCard" style="display: none;" class="relative z-10 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 max-w-md w-full text-center">
+        <!-- Bouncing Emojis -->
+        <div class="text-6xl mb-6 space-x-2">
+            <span class="inline-block bounce">🎉</span>
+            <span class="inline-block bounce" style="animation-delay: 0.2s;">💖</span>
+            <span class="inline-block bounce" style="animation-delay: 0.4s;">💑</span>
+        </div>
+        
+        <!-- Success Message -->
+        <h2 class="pacifico text-4xl md:text-5xl text-pink-600 mb-6 fade-in-up">
+            YAAAY!
+        </h2>
+        
+        <p class="text-lg md:text-xl text-gray-700 mb-6 fade-in-up delay-1">
+            You just made me the happiest person alive! 
+        </p>
+        
+        <p class="text-lg text-gray-600 fade-in-up delay-2">
+            Thank you for being in my life. Let's plan the perfect date! ✨
+        </p>
+        
+        <div class="mt-8 fade-in-up delay-3">
+            <button onclick="location.reload()" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+                Go Back 💕
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Floating Hearts Background Animation
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            const heartCount = 15;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.textContent = '❤️';
+                
+                // Randomize position and animation
+                const leftPosition = Math.random() * 100;
+                const animationDuration = 4 + Math.random() * 3; // 4-7 seconds
+                const animationDelay = Math.random() * 5; // 0-5 seconds delay
+                const size = 1 + Math.random() * 1.5; // Random size between 1rem and 2.5rem (1 + 0 to 1 + 1.5)
+                
+                heart.style.left = `${leftPosition}%`;
+                heart.style.fontSize = `${size}rem`;
+                heart.style.animation = `float ${animationDuration}s linear infinite`;
+                heart.style.animationDelay = `${animationDelay}s`;
+                
+                container.appendChild(heart);
+            }
+        }
+        
+        // Runaway No Button Logic
+        const noBtn = document.getElementById('noBtn');
+        const mainCard = document.getElementById('mainCard');
+        
+        function moveNoButton() {
+            // Get viewport dimensions
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Get button dimensions
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            
+            // Safety margin
+            const margin = 40;
+            
+            // Calculate safe boundaries
+            const maxLeft = viewportWidth - btnWidth - margin;
+            const maxTop = viewportHeight - btnHeight - margin;
+            
+            // Generate random position
+            const randomLeft = Math.random() * maxLeft;
+            const randomTop = Math.random() * maxTop;
+            
+            // Random rotation
+            const randomRotation = (Math.random() * 20) - 10; // -10 to 10 degrees
+            
+            // Apply new position
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${randomLeft}px`;
+            noBtn.style.top = `${randomTop}px`;
+            noBtn.style.transform = `rotate(${randomRotation}deg)`;
+        }
+        
+        // Event listeners for No button
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+        
+        // Yes Button Logic
+        const yesBtn = document.getElementById('yesBtn');
+        const successCard = document.getElementById('successCard');
+        
+        function handleYes() {
+            // Fade out main card
+            mainCard.style.opacity = '0';
+            
+            setTimeout(() => {
+                mainCard.style.display = 'none';
+                successCard.style.display = 'block';
+                
+                // Start confetti
+                startConfetti();
+            }, 500);
+        }
+        
+        yesBtn.addEventListener('click', handleYes);
+        
+        // Confetti Celebration
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Confetti particle class
+        class Confetti {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = -10;
+                this.size = Math.random() * 8 + 5;
+                this.speedY = Math.random() * 3 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.color = this.randomColor();
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+            }
+            
+            randomColor() {
+                const colors = ['#ec4899', '#f472b6', '#fb7185', '#fda4af', '#fbbf24', '#60a5fa', '#a78bfa'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+                
+                // Reset if out of bounds
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+        
+        let confettiParticles = [];
+        let confettiAnimationId = null;
+        
+        function startConfetti() {
+            // Create confetti particles
+            for (let i = 0; i < 150; i++) {
+                confettiParticles.push(new Confetti());
+            }
+            
+            animateConfetti();
+        }
+        
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            confettiParticles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            confettiAnimationId = requestAnimationFrame(animateConfetti);
+        }
+        
+        // Initialize floating hearts on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            createHearts();
+        });
+    </script>
+</body>
+</html>
